@@ -1,0 +1,185 @@
+---
+import '../styles/components/season-selector.css';
+import type { Season } from '../data/shows';
+
+interface Props {
+  seasons: Season[];
+  currentSeason: number;
+  currentEpisode: number;
+}
+
+const { seasons, currentSeason, currentEpisode } = Astro.props;
+const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[0];
+---
+
+<div class="season-selector" id="season-selector">
+  <span class="season-selector__label">Episodes</span>
+
+  <div class="season-selector__controls">
+    {
+      seasons.length > 1 && (
+        <select
+          id="season-select"
+          class="season-selector__select"
+          aria-label="Select season"
+          data-current={currentSeason}
+        >
+          {seasons.map((s) => (
+            <option value={s.season} selected={s.season === currentSeason}>
+              Season {s.season}
+            </option>
+          ))}
+        </select>
+      )
+    }
+    <span class="season-selector__count" id="episode-count">
+      {activeSeason?.episodes.length ?? 0} episodes
+    </span>
+  </div>
+
+  <ul class="episode-list" id="episode-list" role="list">
+    {
+      activeSeason?.episodes.map((ep) => (
+        <li>
+          <button
+            class:list={[
+              'episode-item',
+              { playing: ep.episode === currentEpisode && activeSeason.season === currentSeason },
+            ]}
+            data-src={ep.videoSrc}
+            data-season={activeSeason.season}
+            data-episode={ep.episode}
+            data-title={ep.title}
+            aria-label={`Play Episode ${ep.episode}: ${ep.title}`}
+            aria-pressed={ep.episode === currentEpisode && activeSeason.season === currentSeason}
+          >
+            <span class="episode-item__num">E{ep.episode}</span>
+            <div class="episode-item__body">
+              <div class="episode-item__title">{ep.title}</div>
+              <div class="episode-item__meta">{ep.duration}</div>
+              <div class="episode-item__desc">{ep.description}</div>
+            </div>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  import type { Season } from '../data/shows';
+  import type { Show } from '../data/shows';
+
+  const seasonSelect = document.getElementById('season-select') as HTMLSelectElement | null;
+  const episodeList = document.getElementById('episode-list') as HTMLUListElement | null;
+  const episodeCount = document.getElementById('episode-count') as HTMLSpanElement | null;
+  const wrap = document.getElementById('player-wrap') as HTMLDivElement | null;
+
+  if (!episodeList) throw new Error('episode-list not found');
+
+  function getShows(): Show[] {
+    const w = window as Window & { __SHOWS__?: Show[] };
+    return w.__SHOWS__ ?? [];
+  }
+
+  function renderEpisodes(season: Season, activeSeason: number, activeEpisode: number): void {
+    if (!episodeList) return;
+    const slug = wrap?.dataset['slug'] ?? '';
+    episodeList.innerHTML = season.episodes
+      .map(
+        (ep) => `
+      <li>
+        <button
+          class="episode-item${ep.episode === activeEpisode && season.season === activeSeason ? ' playing' : ''}"
+          data-src="${ep.videoSrc}"
+          data-season="${season.season}"
+          data-episode="${ep.episode}"
+          data-title="${ep.title}"
+          aria-label="Play Episode ${ep.episode}: ${ep.title}"
+          aria-pressed="${ep.episode === activeEpisode && season.season === activeSeason}"
+          data-slug="${slug}"
+        >
+          <span class="episode-item__num">E${ep.episode}</span>
+          <div class="episode-item__body">
+            <div class="episode-item__title">${ep.title}</div>
+            <div class="episode-item__meta">${ep.duration}</div>
+            <div class="episode-item__desc">${ep.description}</div>
+          </div>
+        </button>
+      </li>
+    `
+      )
+      .join('');
+
+    attachEpisodeListeners();
+  }
+
+  function attachEpisodeListeners(): void {
+    episodeList?.querySelectorAll<HTMLButtonElement>('.episode-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const src = btn.dataset['src'] ?? '';
+        const title = btn.dataset['title'] ?? '';
+        const season = Number(btn.dataset['season']);
+        const episode = Number(btn.dataset['episode']);
+
+        // Update URL
+        const params = new URLSearchParams(location.search);
+        params.set('season', String(season));
+        params.set('episode', String(episode));
+        history.replaceState(null, '', `?${params.toString()}`);
+
+        // Switch video
+        const sw = window as Window & {
+          switchEpisode?: (src: string, title: string, season: number, episode: number) => void;
+        };
+        sw.switchEpisode?.(src, title, season, episode);
+
+        // Update playing state
+        episodeList?.querySelectorAll('.episode-item').forEach((el) => {
+          el.classList.remove('playing');
+          el.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('playing');
+        btn.setAttribute('aria-pressed', 'true');
+
+        // Scroll to player
+        document.getElementById('player-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  if (seasonSelect) {
+    seasonSelect.addEventListener('change', () => {
+      const selectedSeason = Number(seasonSelect.value);
+      const slug = wrap?.dataset['slug'] ?? '';
+      const shows = getShows();
+      const show = shows.find((s) => s.slug === slug);
+      if (!show?.seasons) return;
+
+      const season = show.seasons.find((s) => s.season === selectedSeason);
+      if (!season) return;
+
+      if (episodeCount) {
+        episodeCount.textContent = `${season.episodes.length} episodes`;
+      }
+
+      renderEpisodes(season, selectedSeason, 1);
+
+      // Auto-play first episode of new season
+      const firstEp = season.episodes[0];
+      if (firstEp) {
+        const params = new URLSearchParams(location.search);
+        params.set('season', String(selectedSeason));
+        params.set('episode', '1');
+        history.replaceState(null, '', `?${params.toString()}`);
+
+        const sw = window as Window & {
+          switchEpisode?: (src: string, title: string, season: number, episode: number) => void;
+        };
+        sw.switchEpisode?.(firstEp.videoSrc, firstEp.title, selectedSeason, 1);
+      }
+    });
+  }
+
+  attachEpisodeListeners();
+</script>

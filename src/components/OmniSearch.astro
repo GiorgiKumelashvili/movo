@@ -1,0 +1,45 @@
+---
+import '../styles/components/omni-search.css';
+---
+
+<div
+  id="omni-overlay"
+  class="omni-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search"
+  aria-hidden="true"
+>
+  <div class="omni-overlay__header">
+    <div class="omni-overlay__input-wrap">
+      <svg
+        class="omni-overlay__search-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+        />
+      </svg>
+      <input
+        id="omni-input"
+        class="omni-overlay__input"
+        type="search"
+        placeholder="Search movies and series..."
+        autocomplete="off"
+        aria-label="Search"
+      />
+    </div>
+    <button id="omni-close" class="omni-overlay__close" aria-label="Close search">
+      ✕
+    </button>
+  </div>
+
+  <p id="omni-hint" class="omni-overlay__hint">Type to search...</p>
+  <div id="omni-results" class="omni-overlay__results" role="list" aria-live="polite"></div>
+</div>
+
+<script>
+  import { initOmniSearch } from '../scripts/omniSearch';
+  initOmniSearch();
+</script>

@@ -1,0 +1,24 @@
+---
+import Layout from '../components/Layout.astro';
+import Hero from '../components/Hero.astro';
+import MediaRow from '../components/MediaRow.astro';
+import RecentlyWatched from '../components/RecentlyWatched.astro';
+import { getFeatured, getByType } from '../data/shows';
+import '../styles/pages/home.css';
+
+const featured = getFeatured();
+const movies = getByType('movie');
+const series = getByType('series');
+---
+
+<Layout title="Home">
+  <main class="home-page">
+    <Hero show={featured} />
+
+    <div class="home-page__rows">
+      <RecentlyWatched />
+      <MediaRow title="Movies" shows={movies} />
+      <MediaRow title="Series" shows={series} />
+    </div>
+  </main>
+</Layout>

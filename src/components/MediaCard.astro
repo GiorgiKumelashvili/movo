@@ -1,0 +1,39 @@
+---
+import '../styles/components/media-card.css';
+import type { Show } from '../data/shows';
+
+interface Props {
+  show: Show;
+}
+
+const { show } = Astro.props;
+const href = `/show?type=${show.type}&title=${show.slug}`;
+---
+
+<a href={href} class="media-card" data-focusable aria-label={`${show.title}, ${show.type}, ${show.year}`}>
+  <div class="media-card__poster-wrap">
+    <img
+      class="media-card__poster"
+      src={show.poster}
+      alt={`${show.title} poster`}
+      loading="lazy"
+      width="300"
+      height="450"
+    />
+    <span class="media-card__type-badge">{show.type}</span>
+  </div>
+  <div class="media-card__info">
+    <div class="media-card__title">{show.title}</div>
+    <div class="media-card__meta">
+      <span class="media-card__rating">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+          />
+        </svg>
+        {show.rating.toFixed(1)}
+      </span>
+      <span class="media-card__year">{show.year}</span>
+    </div>
+  </div>
+</a>

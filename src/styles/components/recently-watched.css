@@ -1,0 +1,7 @@
+.rw-container {
+  /* Hidden until hydrated — prevents layout flash of empty space */
+}
+
+.rw-container[data-hidden] {
+  display: none;
+}

@@ -1,0 +1,17 @@
+---
+import '../styles/components/recently-watched.css';
+import '../styles/components/media-card.css';
+import '../styles/components/media-row.css';
+---
+
+<!-- Shell populated by recentlyWatched.ts on client -->
+<div id="rw-container" class="rw-container" data-hidden></div>
+
+<script>
+  import { renderRecentlyWatchedRow } from '../scripts/recentlyWatched';
+  import type { Show } from '../data/shows';
+
+  const w = window as Window & { __SHOWS__?: Show[] };
+  const allShows = w.__SHOWS__ ?? [];
+  renderRecentlyWatchedRow('rw-container', allShows);
+</script>

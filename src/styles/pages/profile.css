@@ -1,0 +1,192 @@
+.profile-page {
+  padding: 40px 24px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Header */
+.profile-page__header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.profile-page__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, #0066a0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 2rem;
+}
+
+.profile-page__name {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.profile-page__email {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Stats */
+.profile-page__stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.profile-stat {
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+}
+
+.profile-stat__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+}
+
+.profile-stat__label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Section */
+.profile-page__section {
+  margin-bottom: 40px;
+}
+
+.profile-page__section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.profile-page__section-title a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent);
+  margin-left: 12px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.profile__empty {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  padding: 24px 0;
+}
+
+/* Saved grid */
+.profile-saved-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--gap-card);
+}
+
+.profile-saved-card {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+.profile-saved-card:hover,
+.profile-saved-card:focus-visible {
+  transform: scale(1.03);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.profile-saved-card__poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.profile-saved-card__info {
+  padding: 8px 10px;
+}
+
+.profile-saved-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-saved-card__meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+  text-transform: capitalize;
+}
+
+/* Plan / membership card */
+.profile-plan {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.profile-plan__label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.profile-plan__value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.profile-plan__badge {
+  background-color: var(--accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+@media (min-width: 1280px) {
+  .profile-page {
+    padding: 56px 48px 60px;
+  }
+
+  .profile-saved-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}

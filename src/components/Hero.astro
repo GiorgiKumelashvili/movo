@@ -1,0 +1,60 @@
+---
+import '../styles/components/hero.css';
+import type { Show } from '../data/shows';
+
+interface Props {
+  show: Show;
+}
+
+const { show } = Astro.props;
+const playHref = `/show?type=${show.type}&title=${show.slug}`;
+const infoHref = `/show?type=${show.type}&title=${show.slug}`;
+---
+
+<section class="hero" aria-label={`Featured: ${show.title}`}>
+  <img
+    class="hero__backdrop"
+    src={show.backdrop}
+    alt={`${show.title} backdrop`}
+    fetchpriority="high"
+    width="1280"
+    height="720"
+  />
+
+  <div class="hero__content">
+    <div class="hero__badge">
+      <span class="hero__type-label">{show.type}</span>
+      <span class="hero__rating" aria-label={`IMDB rating: ${show.rating}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+          />
+        </svg>
+        {show.rating.toFixed(1)}
+      </span>
+    </div>
+
+    <h1 class="hero__title">{show.title}</h1>
+
+    <div class="hero__meta" aria-label="Genres">
+      {show.genre.map((g) => <span class="hero__genre">{g}</span>)}
+    </div>
+
+    <p class="hero__description">{show.description}</p>
+
+    <div class="hero__actions">
+      <a href={playHref} class="hero__btn hero__btn--play" aria-label={`Play ${show.title}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        Play
+      </a>
+      <a href={infoHref} class="hero__btn hero__btn--info" aria-label={`More info about ${show.title}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+        </svg>
+        More Info
+      </a>
+    </div>
+  </div>
+</section>

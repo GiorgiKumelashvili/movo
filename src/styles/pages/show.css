@@ -1,0 +1,234 @@
+.show-page {
+  min-height: 100dvh;
+}
+
+/* Backdrop hero area */
+.show-page__backdrop-wrap {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.show-page__backdrop {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.show-page__backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(15, 23, 30, 0.2) 0%, rgba(15, 23, 30, 1) 100%);
+}
+
+/* Main content */
+.show-page__body {
+  padding: 0 24px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.show-page__top {
+  display: flex;
+  gap: 20px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 24px;
+}
+
+.show-page__poster {
+  width: 100px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.show-page__info {
+  flex: 1;
+  padding-top: 64px;
+}
+
+.show-page__type-badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.show-page__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.show-page__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.show-page__rating {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent-amber);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.show-page__rating svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--accent-amber);
+}
+
+.show-page__year {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.show-page__runtime {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.show-page__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.show-page__tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-muted);
+}
+
+.show-page__genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.show-page__genre {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.show-page__description {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.show-page__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.show-page__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  min-height: 48px;
+  text-decoration: none;
+}
+
+.show-page__btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.show-page__btn--play {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.show-page__btn--play:hover,
+.show-page__btn--play:focus-visible {
+  background-color: #0090c7;
+}
+
+.show-page__btn--save {
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.show-page__btn--save:hover,
+.show-page__btn--save:focus-visible {
+  background-color: var(--surface-raised);
+}
+
+.show-page__btn--save.saved {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Player section */
+.show-page__player-section {
+  margin-top: 28px;
+}
+
+@media (min-width: 640px) {
+  .show-page__backdrop-wrap {
+    height: 320px;
+  }
+
+  .show-page__poster {
+    width: 130px;
+  }
+
+  .show-page__body {
+    padding: 0 32px 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .show-page__backdrop-wrap {
+    height: 400px;
+  }
+
+  .show-page__poster {
+    width: 160px;
+  }
+
+  .show-page__body {
+    padding: 0 48px 60px;
+  }
+}

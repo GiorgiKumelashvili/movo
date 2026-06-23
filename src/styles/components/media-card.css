@@ -1,0 +1,138 @@
+.media-card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--surface);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  width: 160px;
+}
+
+/* Letterbox bars */
+.media-card::before,
+.media-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+
+.media-card::before {
+  top: 0;
+}
+
+.media-card::after {
+  bottom: 0;
+}
+
+.media-card:hover,
+.media-card:focus-visible {
+  transform: scale(1.05);
+  outline: none;
+}
+
+.media-card:hover::before,
+.media-card:hover::after,
+.media-card:focus-visible::before,
+.media-card:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.media-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.media-card__poster-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.media-card__poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.2s ease;
+}
+
+.media-card:hover .media-card__poster {
+  filter: brightness(0.85);
+}
+
+.media-card__type-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--text-muted);
+  font-size: 9px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+.media-card__info {
+  padding: 8px 10px 10px;
+}
+
+.media-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.media-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.media-card__rating {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent-amber);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.media-card__rating svg {
+  width: 10px;
+  height: 10px;
+  fill: var(--accent-amber);
+}
+
+.media-card__year {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+@media (min-width: 640px) {
+  .media-card {
+    width: 180px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .media-card {
+    width: 200px;
+  }
+}

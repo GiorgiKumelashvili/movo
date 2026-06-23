@@ -1,0 +1,72 @@
+---
+import Layout from '../components/Layout.astro';
+import '../styles/pages/profile.css';
+---
+
+<Layout title="Profile">
+  <main class="profile-page">
+    <!-- Header -->
+    <div class="profile-page__header">
+      <div class="profile-page__avatar" aria-hidden="true">👤</div>
+      <div>
+        <h1 class="profile-page__name">Alex Johnson</h1>
+        <p class="profile-page__email">alex.johnson@example.com</p>
+      </div>
+    </div>
+
+    <!-- Stats (populated client-side) -->
+    <div class="profile-page__stats">
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-watched">0</span>
+        <span class="profile-stat__label">Watched</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-saved">0</span>
+        <span class="profile-stat__label">Saved</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">∞</span>
+        <span class="profile-stat__label">Hours</span>
+      </div>
+    </div>
+
+    <!-- Membership -->
+    <div class="profile-page__section">
+      <div class="profile-plan">
+        <div>
+          <div class="profile-plan__label">Your plan</div>
+          <div class="profile-plan__value">Movo Premium</div>
+        </div>
+        <span class="profile-plan__badge">Active</span>
+      </div>
+    </div>
+
+    <!-- Saved shows -->
+    <div class="profile-page__section" id="saved-section">
+      <h2 class="profile-page__section-title">
+        Saved Shows
+      </h2>
+      <div class="profile-saved-grid" id="saved-list">
+        <p class="profile__empty">Loading...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    import { getSaved, renderSavedList } from '../scripts/saved';
+    import { getWatchHistory } from '../scripts/recentlyWatched';
+    import type { Show } from '../data/shows';
+
+    const w = window as Window & { __SHOWS__?: Show[] };
+    const allShows = w.__SHOWS__ ?? [];
+
+    // Update stats
+    const watchedStat = document.getElementById('stat-watched');
+    const savedStat = document.getElementById('stat-saved');
+    if (watchedStat) watchedStat.textContent = String(getWatchHistory().length);
+    if (savedStat) savedStat.textContent = String(getSaved().length);
+
+    // Render saved list
+    renderSavedList('saved-list', allShows);
+  </script>
+</Layout>

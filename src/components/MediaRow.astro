@@ -1,0 +1,30 @@
+---
+import '../styles/components/media-row.css';
+import MediaCard from './MediaCard.astro';
+import type { Show } from '../data/shows';
+
+interface Props {
+  title: string;
+  shows: Show[];
+}
+
+const { title, shows } = Astro.props;
+---
+
+{
+  shows.length > 0 && (
+    <section class="media-row" aria-label={title}>
+      <div class="media-row__header">
+        <h2 class="media-row__title">{title}</h2>
+        <span class="media-row__count">{shows.length}</span>
+      </div>
+      <ul class="media-row__list">
+        {shows.map((show) => (
+          <li class="media-row__item">
+            <MediaCard show={show} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
