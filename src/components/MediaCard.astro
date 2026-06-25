@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { show } = Astro.props;
-const href = `/show?type=${show.type}&title=${show.slug}`;
+const href = `/show/${show.slug}`;
 ---
 
 <a href={href} class="media-card" data-focusable aria-label={`${show.title}, ${show.type}, ${show.year}`}>

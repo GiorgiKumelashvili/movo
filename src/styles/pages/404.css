@@ -1,5 +1,5 @@
 .not-found {
-  min-height: calc(100dvh - var(--bottom-bar-height));
+  min-height: calc(100dvh - var(--navbar-height));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,17 +35,18 @@
   gap: 8px;
   padding: 10px 28px;
   border-radius: var(--radius);
-  background-color: var(--accent);
+  background: var(--gradient-accent);
   color: #fff;
   font-size: var(--text-base);
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   margin-top: 8px;
   min-height: 48px;
 }
 
 .not-found__link:hover,
 .not-found__link:focus-visible {
-  background-color: #0090c7;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }

@@ -6,8 +6,7 @@
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 14px;
-  padding: 0 24px;
+  margin-bottom: 16px;
 }
 
 .media-row__title {
@@ -22,6 +21,9 @@
   font-size: var(--text-sm);
   color: var(--text-muted);
   font-family: var(--font-mono);
+  background: rgba(147, 51, 234, 0.12);
+  padding: 2px 8px;
+  border-radius: 20px;
 }
 
 .media-row__list {
@@ -29,7 +31,7 @@
   gap: var(--gap-card);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 6px 24px 12px;
+  padding-bottom: 12px;
   list-style: none;
   scrollbar-width: thin;
   scrollbar-color: var(--accent) transparent;
@@ -42,16 +44,11 @@
 }
 
 @media (min-width: 1280px) {
-  .media-row__header {
-    padding: 0 48px;
+  .media-row__title {
+    font-size: var(--text-2xl);
   }
 
   .media-row__list {
-    padding: 6px 48px 12px;
     gap: 16px;
-  }
-
-  .media-row__title {
-    font-size: var(--text-2xl);
   }
 }

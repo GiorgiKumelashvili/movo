@@ -7,8 +7,8 @@ interface Props {
 }
 
 const { show } = Astro.props;
-const playHref = `/show?type=${show.type}&title=${show.slug}`;
-const infoHref = `/show?type=${show.type}&title=${show.slug}`;
+const playHref = `/show/${show.slug}`;
+const infoHref = `/show/${show.slug}`;
 ---
 
 <section class="hero" aria-label={`Featured: ${show.title}`}>

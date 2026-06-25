@@ -6,9 +6,8 @@ function getShows(): Show[] {
 }
 
 function buildResultCard(show: Show): HTMLAnchorElement {
-  const params = new URLSearchParams({ type: show.type, title: show.slug });
   const a = document.createElement('a');
-  a.href = `/show?${params.toString()}`;
+  a.href = `/show/${show.slug}`;
   a.className = 'omni-result-card';
   a.setAttribute('role', 'listitem');
   a.innerHTML = `

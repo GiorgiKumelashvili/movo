@@ -6,14 +6,14 @@ import RecentlyWatched from '../components/RecentlyWatched.astro';
 import { getFeatured, getByType } from '../data/shows';
 import '../styles/pages/home.css';
 
-const featured = getFeatured();
+const featured = getFeatured()[0];
 const movies = getByType('movie');
 const series = getByType('series');
 ---
 
 <Layout title="Home">
   <main class="home-page">
-    <Hero show={featured} />
+    {featured && <Hero show={featured} />}
 
     <div class="home-page__rows">
       <RecentlyWatched />

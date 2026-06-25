@@ -1,0 +1,195 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  z-index: 100;
+  background: rgba(8, 6, 17, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(147, 51, 234, 0.15);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 clamp(24px, 4vw, 64px);
+}
+
+.navbar__brand {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  min-height: unset;
+  line-height: 1;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__search-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: unset;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navbar__search-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.navbar__search-btn:hover,
+.navbar__search-btn:focus-visible {
+  background: rgba(147, 51, 234, 0.15);
+  color: var(--text);
+}
+
+/* Profile wrap */
+.navbar__profile-wrap {
+  position: relative;
+}
+
+.navbar__profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  min-height: unset;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.navbar__profile-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.navbar__profile-btn .navbar__chevron {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.navbar__profile-btn[aria-expanded='true'] .navbar__chevron {
+  transform: rotate(180deg);
+}
+
+.navbar__profile-btn:hover,
+.navbar__profile-btn:focus-visible,
+.navbar__profile-btn[aria-expanded='true'] {
+  background: rgba(147, 51, 234, 0.15);
+  color: var(--text);
+}
+
+/* Dropdown */
+.navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: var(--surface-raised);
+  border: 1px solid rgba(147, 51, 234, 0.25);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(147, 51, 234, 0.1);
+  overflow: hidden;
+  animation: dropdown-in 0.15s ease;
+}
+
+.navbar__dropdown[hidden] {
+  display: none;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 16px;
+  height: 48px;
+  min-height: unset;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-align: left;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.navbar__dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.navbar__dropdown-item:hover,
+.navbar__dropdown-item:focus-visible {
+  background: rgba(147, 51, 234, 0.12);
+  color: var(--text);
+}
+
+.navbar__dropdown-item:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.navbar__dropdown-item:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  color: var(--danger);
+}
+
+.navbar__dropdown-item:last-child:hover,
+.navbar__dropdown-item:last-child:focus-visible {
+  background: rgba(224, 82, 82, 0.1);
+  color: var(--danger);
+}
+
+.navbar__dropdown-divider {
+  height: 1px;
+  background: rgba(147, 51, 234, 0.12);
+  margin: 4px 0;
+}

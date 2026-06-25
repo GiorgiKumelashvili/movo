@@ -3,5 +3,5 @@
 }
 
 .home-page__rows {
-  padding-top: 8px;
+  padding: 8px clamp(24px, 4vw, 64px) 48px;
 }

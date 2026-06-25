@@ -1,15 +1,17 @@
 /* ── Design Tokens ─────────────────────────────────────── */
 :root {
-  --ground: #0f171e;
-  --surface: #1a2535;
-  --surface-raised: #233047;
+  --ground: #080611;
+  --surface: #100d20;
+  --surface-raised: #1a163a;
   --text: #f0ede6;
-  --text-muted: #8b95a4;
-  --accent: #00a8e1;
-  --accent-amber: #e8c547;
+  --text-muted: #8b8aab;
+  --accent: #9333ea;
+  --accent-light: #a855f7;
+  --accent-amber: #f59e0b;
   --danger: #e05252;
+  --gradient-accent: linear-gradient(135deg, #9333ea 0%, #c026d3 100%);
 
-  --bottom-bar-height: 64px;
+  --navbar-height: 64px;
 
   --font-display: 'Barlow Condensed', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
@@ -53,7 +55,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   min-height: 100dvh;
-  padding-bottom: var(--bottom-bar-height);
+  padding-top: var(--navbar-height);
   -webkit-font-smoothing: antialiased;
 }
 

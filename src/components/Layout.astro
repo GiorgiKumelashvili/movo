@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import BottomBar from './BottomBar.astro';
+import Navbar from './Navbar.astro';
 import OmniSearch from './OmniSearch.astro';
 import { shows } from '../data/shows';
 
@@ -28,8 +28,8 @@ const { title, description = 'Stream movies and series on Movo' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    <Navbar />
     <slot />
-    <BottomBar />
     <OmniSearch />
 
     <!-- Data island: makes all shows available to client scripts -->
