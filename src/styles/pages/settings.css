@@ -1,0 +1,29 @@
+.settings-page {
+  min-height: calc(100vh - var(--navbar-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(24px, 4vw, 64px);
+}
+
+.settings-page__content {
+  text-align: center;
+}
+
+.settings-page__icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.settings-page__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.settings-page__sub {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+}

@@ -41,8 +41,16 @@ export function renderRecentlyWatchedRow(containerId: string, allShows: Show[]):
     return;
   }
 
+  // Deduplicate history by slug — keep most recent entry per show
+  const seenSlugs = new Set<string>();
+  const deduped = history.filter((h) => {
+    if (seenSlugs.has(h.slug)) return false;
+    seenSlugs.add(h.slug);
+    return true;
+  });
+
   const showMap = new Map(allShows.map((s) => [s.slug, s]));
-  const items = history.map((h) => showMap.get(h.slug)).filter((s): s is Show => s !== undefined);
+  const items = deduped.map((h) => showMap.get(h.slug)).filter((s): s is Show => s !== undefined);
 
   if (items.length === 0) {
     container.remove();
@@ -53,7 +61,7 @@ export function renderRecentlyWatchedRow(containerId: string, allShows: Show[]):
     .map(
       (s) => `
     <li class="media-row__item">
-      <a href="/show?type=${s.type}&title=${s.slug}" class="media-card" data-focusable aria-label="${s.title}">
+      <a href="/show/${s.slug}" class="media-card" data-focusable aria-label="${s.title}">
         <div class="media-card__poster-wrap">
           <img class="media-card__poster" src="${s.poster}" alt="${s.title} poster" loading="lazy" width="300" height="450" />
           <span class="media-card__type-badge">${s.type}</span>

@@ -1,43 +1,40 @@
 ---
+export const prerender = false;
+
 import Layout from '../../components/Layout.astro';
 import VideoPlayer from '../../components/VideoPlayer.astro';
 import SeasonSelector from '../../components/SeasonSelector.astro';
-import { shows } from '../../data/shows';
+import { getMovieDetail, getTvDetail } from '../../lib/tmdb';
 import type { Show } from '../../data/shows';
 import '../../styles/pages/show.css';
 
-export async function getStaticPaths() {
-  return shows.map((show) => ({
-    params: { slug: show.slug },
-    props: { show }
-  }));
+const { slug } = Astro.params;
+
+function parseSlug(s: string): { type: 'movie' | 'series'; tmdbId: number } | null {
+  const movieMatch = /^movie-(\d+)$/.exec(s);
+  if (movieMatch?.[1]) return { type: 'movie', tmdbId: Number(movieMatch[1]) };
+  const tvMatch = /^series-(\d+)$/.exec(s);
+  if (tvMatch?.[1]) return { type: 'series', tmdbId: Number(tvMatch[1]) };
+  return null;
 }
 
-interface Props {
-  show: Show;
-}
+const parsed = slug ? parseSlug(slug) : null;
+if (!parsed) return Astro.redirect('/404');
 
-const { show } = Astro.props;
+let show: Show;
+try {
+  show = parsed.type === 'movie'
+    ? await getMovieDetail(parsed.tmdbId)
+    : await getTvDetail(parsed.tmdbId);
+} catch {
+  return Astro.redirect('/404');
+}
 
 const currentSeason = 1;
 const currentEpisode = 1;
-
-function resolveVideoSrc(): string {
-  if (show.type === 'movie') return show.videoSrc ?? '/videos/sample.mp4';
-  return show.seasons?.[0]?.episodes?.[0]?.videoSrc ?? '/videos/sample.mp4';
-}
-
-function resolveVideoTitle(): string {
-  if (show.type === 'movie') return show.title;
-  const ep = show.seasons?.[0]?.episodes?.[0];
-  return ep ? `S1E1: ${ep.title}` : show.title;
-}
-
-const videoSrc = resolveVideoSrc();
-const videoTitle = resolveVideoTitle();
 ---
 
-<Layout title={show.title} description={show.description}>
+<Layout title={show.title} description={show.description} shows={[show]}>
   <main class="show-page" data-focusable>
     <div class="show-page__backdrop-wrap">
       <img
@@ -65,7 +62,7 @@ const videoTitle = resolveVideoTitle();
           <h1 class="show-page__title">{show.title}</h1>
 
           <div class="show-page__meta-row">
-            <span class="show-page__rating" aria-label={`IMDB ${show.rating}`}>
+            <span class="show-page__rating" aria-label={`Rating ${show.rating}`}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
               </svg>
@@ -105,6 +102,10 @@ const videoTitle = resolveVideoTitle();
               id="save-btn"
               aria-label="Save to watchlist"
               data-slug={show.slug}
+              data-title={show.title}
+              data-poster={show.poster}
+              data-year={show.year}
+              data-showtype={show.type}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" />
@@ -116,18 +117,27 @@ const videoTitle = resolveVideoTitle();
       </div>
 
       <div class="show-page__player-section" id="player-section">
-        <VideoPlayer
-          src={videoSrc}
-          poster={show.backdrop}
-          title={videoTitle}
-          showSlug={show.slug}
-          showType={show.type}
-          season={show.type === 'series' ? currentSeason : undefined}
-          episode={show.type === 'series' ? currentEpisode : undefined}
-        />
+        {show.type === 'movie' && (
+          <VideoPlayer
+            tmdbId={show.tmdbId ?? parsed.tmdbId}
+            showType={show.type}
+            title={show.title}
+            showSlug={show.slug}
+          />
+        )}
+        {show.type === 'series' && (
+          <VideoPlayer
+            tmdbId={show.tmdbId ?? parsed.tmdbId}
+            showType={show.type}
+            title={show.title}
+            showSlug={show.slug}
+            season={currentSeason}
+            episode={currentEpisode}
+          />
+        )}
       </div>
 
-      {show.type === 'series' && show.seasons && (
+      {show.type === 'series' && show.seasons && show.seasons.length > 0 && (
         <SeasonSelector
           seasons={show.seasons}
           currentSeason={currentSeason}
@@ -144,11 +154,9 @@ const videoTitle = resolveVideoTitle();
 
     const playBtn = document.getElementById('play-btn');
     const playerSection = document.getElementById('player-section');
-    const playerVideo = document.getElementById('player-video') as HTMLVideoElement | null;
 
     playBtn?.addEventListener('click', () => {
       playerSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => void playerVideo?.play(), 400);
     });
   </script>
 </Layout>

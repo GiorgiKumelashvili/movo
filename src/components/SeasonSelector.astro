@@ -46,7 +46,6 @@ const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[
               'episode-item',
               { playing: ep.episode === currentEpisode && activeSeason.season === currentSeason },
             ]}
-            data-src={ep.videoSrc}
             data-season={activeSeason.season}
             data-episode={ep.episode}
             data-title={ep.title}
@@ -91,7 +90,6 @@ const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[
       <li>
         <button
           class="episode-item${ep.episode === activeEpisode && season.season === activeSeason ? ' playing' : ''}"
-          data-src="${ep.videoSrc}"
           data-season="${season.season}"
           data-episode="${ep.episode}"
           data-title="${ep.title}"
@@ -117,8 +115,6 @@ const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[
   function attachEpisodeListeners(): void {
     episodeList?.querySelectorAll<HTMLButtonElement>('.episode-item').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const src = btn.dataset['src'] ?? '';
-        const title = btn.dataset['title'] ?? '';
         const season = Number(btn.dataset['season']);
         const episode = Number(btn.dataset['episode']);
 
@@ -130,9 +126,9 @@ const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[
 
         // Switch video
         const sw = window as Window & {
-          switchEpisode?: (src: string, title: string, season: number, episode: number) => void;
+          switchEpisode?: (season: number, episode: number) => void;
         };
-        sw.switchEpisode?.(src, title, season, episode);
+        sw.switchEpisode?.(season, episode);
 
         // Update playing state
         episodeList?.querySelectorAll('.episode-item').forEach((el) => {
@@ -174,9 +170,9 @@ const activeSeason = seasons.find((s) => s.season === currentSeason) ?? seasons[
         history.replaceState(null, '', `?${params.toString()}`);
 
         const sw = window as Window & {
-          switchEpisode?: (src: string, title: string, season: number, episode: number) => void;
+          switchEpisode?: (season: number, episode: number) => void;
         };
-        sw.switchEpisode?.(firstEp.videoSrc, firstEp.title, selectedSeason, 1);
+        sw.switchEpisode?.(selectedSeason, 1);
       }
     });
   }

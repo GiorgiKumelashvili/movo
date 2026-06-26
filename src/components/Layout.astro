@@ -2,14 +2,15 @@
 import '../styles/global.css';
 import Navbar from './Navbar.astro';
 import OmniSearch from './OmniSearch.astro';
-import { shows } from '../data/shows';
+import type { Show } from '../data/shows';
 
 interface Props {
   title: string;
   description?: string;
+  shows?: Show[];
 }
 
-const { title, description = 'Stream movies and series on Movo' } = Astro.props;
+const { title, description = 'Stream movies and series on Movo', shows = [] } = Astro.props;
 ---
 
 <!doctype html>
@@ -35,11 +36,10 @@ const { title, description = 'Stream movies and series on Movo' } = Astro.props;
     <!-- Data island: makes all shows available to client scripts -->
     <script type="application/json" id="shows-data" set:html={JSON.stringify(shows)}></script>
 
-    <script>
-      // Parse shows data and attach to window for all client scripts
-      const el = document.getElementById('shows-data');
-      if (el?.textContent) {
-        (window as Window & { __SHOWS__: unknown }).__SHOWS__ = JSON.parse(el.textContent);
+    <script is:inline>
+      var el = document.getElementById('shows-data');
+      if (el && el.textContent) {
+        window.__SHOWS__ = JSON.parse(el.textContent);
       }
     </script>
 

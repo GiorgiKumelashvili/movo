@@ -1,0 +1,41 @@
+---
+import Layout from '../components/Layout.astro';
+import '../styles/pages/saved.css';
+---
+
+<Layout title="Saved Shows">
+  <main class="saved-page">
+    <h1 class="saved-page__title">Saved Shows</h1>
+
+    <div class="saved-page__stats">
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-watched">0</span>
+        <span class="profile-stat__label">Watched</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-saved">0</span>
+        <span class="profile-stat__label">Saved</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">∞</span>
+        <span class="profile-stat__label">Hours</span>
+      </div>
+    </div>
+
+    <div class="profile-saved-grid" id="saved-list">
+      <p class="profile__empty">Loading...</p>
+    </div>
+  </main>
+
+  <script>
+    import { getSaved, renderSavedList } from '../scripts/saved';
+    import { getWatchHistory } from '../scripts/recentlyWatched';
+
+    const watchedStat = document.getElementById('stat-watched');
+    const savedStat = document.getElementById('stat-saved');
+    if (watchedStat) watchedStat.textContent = String(getWatchHistory().length);
+    if (savedStat) savedStat.textContent = String(getSaved().length);
+
+    renderSavedList('saved-list');
+  </script>
+</Layout>

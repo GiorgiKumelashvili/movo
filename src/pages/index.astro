@@ -3,15 +3,18 @@ import Layout from '../components/Layout.astro';
 import Hero from '../components/Hero.astro';
 import MediaRow from '../components/MediaRow.astro';
 import RecentlyWatched from '../components/RecentlyWatched.astro';
-import { getFeatured, getByType } from '../data/shows';
+import { discoverMovies, discoverTv } from '../lib/tmdb';
 import '../styles/pages/home.css';
 
-const featured = getFeatured()[0];
-const movies = getByType('movie');
-const series = getByType('series');
+const [movies, series] = await Promise.all([
+  discoverMovies().catch((): [] => []),
+  discoverTv().catch((): [] => []),
+]);
+
+const featured = movies[0];
 ---
 
-<Layout title="Home">
+<Layout title="Home" shows={[...movies, ...series]}>
   <main class="home-page">
     {featured && <Hero show={featured} />}
 
