@@ -3,53 +3,26 @@
   display: block;
   text-decoration: none;
   color: var(--text);
-  border-radius: var(--radius);
+  border-radius: 10px;
   overflow: hidden;
   background-color: var(--surface);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   flex-shrink: 0;
-  width: 180px;
-}
-
-/* Top/bottom accent bars on hover */
-.media-card::before,
-.media-card::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.2s ease;
-  z-index: 2;
-}
-
-.media-card::before {
-  top: 0;
-}
-
-.media-card::after {
-  bottom: 0;
+  width: 172px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .media-card:hover,
 .media-card:focus-visible {
-  transform: scale(1.05);
-  box-shadow: 0 8px 32px rgba(147, 51, 234, 0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
   outline: none;
 }
 
-.media-card:hover::before,
-.media-card:hover::after,
-.media-card:focus-visible::before,
-.media-card:focus-visible::after {
-  transform: scaleX(1);
-}
-
 .media-card:focus-visible {
-  box-shadow: 0 0 0 2px var(--accent), 0 8px 32px rgba(147, 51, 234, 0.3);
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .media-card__poster-wrap {
@@ -64,38 +37,50 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: filter 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .media-card:hover .media-card__poster {
-  filter: brightness(0.8);
+  transform: scale(1.04);
 }
 
+/* Type badge — top-left */
 .media-card__type-badge {
   position: absolute;
   top: 8px;
-  right: 8px;
-  background-color: rgba(8, 6, 17, 0.75);
-  backdrop-filter: blur(4px);
-  color: var(--accent-light);
+  left: 8px;
+  background-color: rgba(11, 9, 8, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--text);
   font-size: 9px;
   font-family: var(--font-mono);
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 3px 6px;
-  border-radius: 3px;
-  border: 1px solid rgba(147, 51, 234, 0.3);
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 20px;
+  z-index: 2;
 }
 
-.media-card__info {
-  padding: 10px 12px 12px;
+/* Bottom overlay with title + meta */
+.media-card__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 10px 10px;
+  background: linear-gradient(to top, rgba(11, 9, 8, 0.95) 0%, transparent 100%);
+  z-index: 2;
 }
 
 .media-card__title {
   font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 18px;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -105,37 +90,91 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 5px;
 }
 
 .media-card__rating {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--accent-amber);
+  font-size: 12px;
+  color: var(--gold);
   display: flex;
   align-items: center;
   gap: 3px;
+  font-weight: 500;
 }
 
 .media-card__rating svg {
   width: 10px;
   height: 10px;
-  fill: var(--accent-amber);
+  flex-shrink: 0;
+  color: var(--gold);
 }
 
 .media-card__year {
-  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--text-muted);
+}
+
+/* Remove button — visible on card hover */
+.media-card__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 4;
+  width: 26px;
+  height: 26px;
+  min-height: unset;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.media-card__remove svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.media-card:hover .media-card__remove,
+.media-card:focus-within .media-card__remove {
+  opacity: 1;
+}
+
+.media-card__remove:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* Continue watching progress bar */
+.media-card__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+  border-radius: 0 2px 0 0;
+  z-index: 3;
+  transition: width 0.3s ease;
+  max-width: 100%;
 }
 
 @media (min-width: 640px) {
   .media-card {
-    width: 200px;
+    width: 185px;
   }
 }
 
 @media (min-width: 1280px) {
   .media-card {
-    width: 220px;
+    width: 200px;
   }
 }

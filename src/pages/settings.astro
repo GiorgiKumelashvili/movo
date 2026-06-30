@@ -5,10 +5,144 @@ import '../styles/pages/settings.css';
 
 <Layout title="Settings">
   <main class="settings-page">
-    <div class="settings-page__content">
-      <div class="settings-page__icon" aria-hidden="true">🚧</div>
-      <h1 class="settings-page__title">Under Construction</h1>
-      <p class="settings-page__sub">Settings are coming soon.</p>
-    </div>
+    <h1 class="settings-page__title">Settings</h1>
+
+    <!-- Playback -->
+    <section class="settings-group">
+      <h2 class="settings-group__label">Playback</h2>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Autoplay next episode</span>
+            <span class="settings-row__desc">Play the next episode automatically</span>
+          </div>
+          <button class="toggle toggle--on" role="switch" aria-checked="true" data-key="autoplay_episode" aria-label="Autoplay next episode">
+            <span class="toggle__knob"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- General -->
+    <section class="settings-group">
+      <h2 class="settings-group__label">General</h2>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Streaming quality</span>
+            <span class="settings-row__desc">Select default video resolution</span>
+          </div>
+          <select class="settings-select" id="select-quality" aria-label="Streaming quality">
+            <option value="auto">Auto</option>
+            <option value="4k">4K Ultra HD</option>
+            <option value="1080p">1080p HD</option>
+            <option value="720p">720p</option>
+          </select>
+        </div>
+        <div class="settings-card__divider"></div>
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Subtitle language</span>
+            <span class="settings-row__desc">Default subtitle track</span>
+          </div>
+          <select class="settings-select" id="select-subtitles" aria-label="Subtitle language">
+            <option value="off">Off</option>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Danger Zone -->
+    <section class="settings-group settings-group--danger">
+      <h2 class="settings-group__label">Danger Zone</h2>
+      <div class="settings-card settings-card--danger">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Clear watch history</span>
+            <span class="settings-row__desc">Permanently remove all viewing history</span>
+          </div>
+          <button class="settings-danger-btn" id="clear-history-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6" />
+              <path d="M9 6V4h6v2" />
+            </svg>
+            Clear history
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <script>
+    type Settings = {
+      autoplay_episode: boolean;
+      streaming_quality: string;
+      subtitle_language: string;
+    };
+
+    const SETTINGS_KEY = 'movo_settings';
+
+    function loadSettings(): Settings {
+      try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (raw) return JSON.parse(raw) as Settings;
+      } catch { /* ignore */ }
+      return { autoplay_episode: true, streaming_quality: 'auto', subtitle_language: 'off' };
+    }
+
+    function saveSettings(s: Settings): void {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    }
+
+    function readCurrentSettings(): Settings {
+      const toggle = document.querySelector<HTMLButtonElement>('[data-key="autoplay_episode"]');
+      const quality = document.getElementById('select-quality') as HTMLSelectElement | null;
+      const subs = document.getElementById('select-subtitles') as HTMLSelectElement | null;
+      return {
+        autoplay_episode: toggle?.getAttribute('aria-checked') === 'true',
+        streaming_quality: quality?.value ?? 'auto',
+        subtitle_language: subs?.value ?? 'off',
+      };
+    }
+
+    // Init from localStorage
+    const saved = loadSettings();
+
+    const toggleBtn = document.querySelector<HTMLButtonElement>('[data-key="autoplay_episode"]');
+    if (toggleBtn) {
+      const on = saved.autoplay_episode;
+      toggleBtn.setAttribute('aria-checked', String(on));
+      toggleBtn.classList.toggle('toggle--on', on);
+    }
+
+    const qualityEl = document.getElementById('select-quality') as HTMLSelectElement | null;
+    if (qualityEl) qualityEl.value = saved.streaming_quality;
+
+    const subsEl = document.getElementById('select-subtitles') as HTMLSelectElement | null;
+    if (subsEl) subsEl.value = saved.subtitle_language;
+
+    // Toggle
+    toggleBtn?.addEventListener('click', () => {
+      const checked = toggleBtn.getAttribute('aria-checked') === 'true';
+      toggleBtn.setAttribute('aria-checked', String(!checked));
+      toggleBtn.classList.toggle('toggle--on', !checked);
+      saveSettings(readCurrentSettings());
+    });
+
+    // Selects
+    qualityEl?.addEventListener('change', () => saveSettings(readCurrentSettings()));
+    subsEl?.addEventListener('change', () => saveSettings(readCurrentSettings()));
+
+    // Clear history
+    document.getElementById('clear-history-btn')?.addEventListener('click', () => {
+      if (confirm('Clear all watch history? This cannot be undone.')) {
+        localStorage.removeItem('movo_rw');
+      }
+    });
+  </script>
 </Layout>

@@ -1,20 +1,29 @@
 /* ── Design Tokens ─────────────────────────────────────── */
 :root {
-  --ground: #080611;
-  --surface: #100d20;
-  --surface-raised: #1a163a;
-  --text: #f0ede6;
-  --text-muted: #8b8aab;
-  --accent: #9333ea;
-  --accent-light: #a855f7;
-  --accent-amber: #f59e0b;
+  --ground: #0b0908;
+  --surface: #16110f;
+  --surface-raised: #211a16;
+
+  --accent: #e23744;
+  --accent-deep: #b3192a;
+  --accent-ember: #f5933b;
+  --gold: #f5c451;
   --danger: #e05252;
-  --gradient-accent: linear-gradient(135deg, #9333ea 0%, #c026d3 100%);
+
+  --gradient-accent: linear-gradient(135deg, #e23744 0%, #b3192a 100%);
+  --gradient-brand: linear-gradient(135deg, #e23744 0%, #f5933b 100%);
+
+  --text: #f4f0ea;
+  --text-muted: #9a8f86;
+  --text-dim: #7a7068;
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.15);
 
   --navbar-height: 64px;
 
-  --font-display: 'Barlow Condensed', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Bebas Neue', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
   --text-xs: 0.75rem;
@@ -29,8 +38,8 @@
   --radius: 8px;
   --radius-lg: 12px;
 
-  --gap-card: 12px;
-  --gap-row: 32px;
+  --gap-card: 14px;
+  --gap-row: 40px;
 }
 
 /* ── Reset ─────────────────────────────────────────────── */
@@ -97,17 +106,22 @@ img {
 
 /* ── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  height: 4px;
-  width: 4px;
+  height: 6px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+html.is-scrolling::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* ── Utilities ─────────────────────────────────────────── */
@@ -126,7 +140,47 @@ img {
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(20px, 4vw, 56px);
+}
+
+/* ── Keyframes ─────────────────────────────────────────── */
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ken {
+  from { transform: scale(1.08); }
+  to { transform: scale(1.16); }
+}
+
+@keyframes toast {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ── Reduced motion ────────────────────────────────────── */
@@ -139,4 +193,36 @@ img {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ── Toast ─────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  animation: toast 0.25s ease;
+  white-space: nowrap;
+  min-height: unset;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  flex-shrink: 0;
 }

@@ -3,39 +3,84 @@ import Layout from '../components/Layout.astro';
 import '../styles/pages/saved.css';
 ---
 
-<Layout title="Saved Shows">
+<Layout title="My List">
   <main class="saved-page">
-    <h1 class="saved-page__title">Saved Shows</h1>
-
-    <div class="saved-page__stats">
-      <div class="profile-stat">
-        <span class="profile-stat__value" id="stat-watched">0</span>
-        <span class="profile-stat__label">Watched</span>
-      </div>
-      <div class="profile-stat">
-        <span class="profile-stat__value" id="stat-saved">0</span>
-        <span class="profile-stat__label">Saved</span>
-      </div>
-      <div class="profile-stat">
-        <span class="profile-stat__value">∞</span>
-        <span class="profile-stat__label">Hours</span>
-      </div>
+    <div class="saved-page__header">
+      <h1 class="saved-page__title">My List</h1>
+      <span class="saved-page__count" id="saved-count"></span>
     </div>
 
-    <div class="profile-saved-grid" id="saved-list">
-      <p class="profile__empty">Loading...</p>
+    <div class="saved-page__grid" id="saved-list">
+      <!-- rendered by script -->
+    </div>
+
+    <div id="saved-empty" class="saved-page__empty" hidden>
+      <div class="saved-empty__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+        </svg>
+      </div>
+      <p class="saved-empty__title">Your list is empty</p>
+      <p class="saved-empty__hint">Add titles using the <strong>+ My List</strong> button on any show page.</p>
+      <a href="/" class="saved-empty__cta">Browse titles</a>
     </div>
   </main>
 
   <script>
-    import { getSaved, renderSavedList } from '../scripts/saved';
-    import { getWatchHistory } from '../scripts/recentlyWatched';
+    import { getSaved, toggleSaved } from '../scripts/saved';
 
-    const watchedStat = document.getElementById('stat-watched');
-    const savedStat = document.getElementById('stat-saved');
-    if (watchedStat) watchedStat.textContent = String(getWatchHistory().length);
-    if (savedStat) savedStat.textContent = String(getSaved().length);
+    function render(): void {
+      const grid = document.getElementById('saved-list');
+      const countEl = document.getElementById('saved-count');
+      const emptyEl = document.getElementById('saved-empty');
+      if (!grid || !emptyEl) return;
 
-    renderSavedList('saved-list');
+      const items = getSaved();
+      if (countEl) countEl.textContent = items.length > 0 ? `${items.length} title${items.length !== 1 ? 's' : ''}` : '';
+
+      if (items.length === 0) {
+        grid.innerHTML = '';
+        emptyEl.hidden = false;
+        return;
+      }
+
+      emptyEl.hidden = true;
+      grid.innerHTML = items.map((s) => `
+        <div class="saved-card" data-slug="${s.slug}">
+          <a href="/show/${s.slug}" class="saved-card__link" aria-label="${s.title}">
+            <div class="saved-card__poster-wrap">
+              <img class="saved-card__poster" src="${s.poster}" alt="${s.title} poster" loading="lazy" />
+              <div class="saved-card__overlay">
+                <div class="saved-card__title">${s.title}</div>
+                <div class="saved-card__meta">★ · ${s.year}</div>
+              </div>
+            </div>
+          </a>
+          <button
+            class="saved-card__remove"
+            data-slug="${s.slug}"
+            aria-label="Remove ${s.title} from My List"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      `).join('');
+
+      // Remove buttons
+      grid.querySelectorAll<HTMLButtonElement>('.saved-card__remove').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const slug = btn.dataset['slug'] ?? '';
+          const item = getSaved().find((s) => s.slug === slug);
+          if (item) {
+            toggleSaved(item);
+            render();
+          }
+        });
+      });
+    }
+
+    render();
   </script>
 </Layout>

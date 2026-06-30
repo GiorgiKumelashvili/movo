@@ -1,29 +1,173 @@
 .settings-page {
-  min-height: calc(100vh - var(--navbar-height));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(24px, 4vw, 64px);
-}
-
-.settings-page__content {
-  text-align: center;
-}
-
-.settings-page__icon {
-  font-size: 4rem;
-  margin-bottom: 24px;
-  display: block;
+  padding: 40px clamp(20px, 4vw, 56px) 60px;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .settings-page__title {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  margin-bottom: 40px;
+}
+
+/* Group */
+.settings-group {
+  margin-bottom: 36px;
+}
+
+.settings-group__label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
-.settings-page__sub {
+/* Card */
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.settings-card--danger {
+  background: rgba(224, 82, 82, 0.06);
+  border-color: rgba(224, 82, 82, 0.2);
+}
+
+.settings-card__divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 16px;
+}
+
+/* Row */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 20px;
+  min-height: 72px;
+}
+
+.settings-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row__name {
+  font-weight: 600;
   font-size: var(--text-base);
+  color: var(--text);
+}
+
+.settings-row__desc {
+  font-size: var(--text-sm);
   color: var(--text-muted);
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  border-radius: 15px;
+  background: var(--border-strong);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-height: unset;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.toggle--on {
+  background: var(--gradient-accent);
+}
+
+.toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.toggle--on .toggle__knob {
+  transform: translateX(22px);
+}
+
+.toggle:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Select */
+.settings-select {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  padding: 8px 32px 8px 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239a8f86'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 20px;
+  min-height: 38px;
+  max-height: 38px;
+  flex-shrink: 0;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.settings-select:focus {
+  border-color: var(--accent);
+}
+
+/* Danger button */
+.settings-danger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: rgba(224, 82, 82, 0.12);
+  border: 1px solid rgba(224, 82, 82, 0.3);
+  color: var(--danger);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  min-height: unset;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.settings-danger-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.settings-danger-btn:hover {
+  background: rgba(224, 82, 82, 0.22);
 }

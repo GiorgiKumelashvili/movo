@@ -5,25 +5,30 @@
 .media-row__header {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .media-row__title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 26px;
+  letter-spacing: 0.04em;
   color: var(--text);
+  line-height: 1;
 }
 
 .media-row__count {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
   font-family: var(--font-mono);
-  background: rgba(147, 51, 234, 0.12);
-  padding: 2px 8px;
-  border-radius: 20px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+
+.media-row__subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .media-row__list {
@@ -45,7 +50,7 @@
 
 @media (min-width: 1280px) {
   .media-row__title {
-    font-size: var(--text-2xl);
+    font-size: 28px;
   }
 
   .media-row__list {
