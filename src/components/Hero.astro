@@ -8,7 +8,6 @@ interface Props {
 
 const { show } = Astro.props;
 const playHref = `/show/${show.slug}`;
-const infoHref = `/show/${show.slug}`;
 const genres = show.genre.join(' · ');
 ---
 
@@ -63,14 +62,6 @@ const genres = show.genre.join(' · ');
           <path d="M8 5v14l11-7z" />
         </svg>
         Play Now
-      </a>
-      <a href={infoHref} class="hero__btn hero__btn--info" aria-label={`More info about ${show.title}`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-        More Info
       </a>
     </div>
   </div>

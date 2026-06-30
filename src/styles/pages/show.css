@@ -227,22 +227,6 @@
   border-color: rgba(226, 55, 68, 0.4);
 }
 
-/* Square trailer button */
-.show-page__btn--trailer {
-  width: 50px;
-  height: 50px;
-  padding: 0;
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-strong);
-  color: var(--text-muted);
-}
-
-.show-page__btn--trailer:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--text);
-}
-
 /* ── Content below hero ────────────────────────────────── */
 .show-page__content {
   padding: 32px clamp(20px, 4vw, 56px) 60px;

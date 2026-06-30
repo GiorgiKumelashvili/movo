@@ -70,21 +70,27 @@ import '../styles/pages/profile.css';
     if (activityEl) {
       const history = getWatchHistory().slice(0, 8);
       if (history.length > 0) {
-        activityEl.innerHTML = history.map((item) => `
-          <div class="profile-activity__item">
-            <a href="/show/${item.slug}" class="profile-activity__thumb-link" aria-label="${item.slug}">
-              <div class="profile-activity__thumb" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
+        const w = window as Window & { __SHOWS__?: import('../data/shows').Show[] };
+        const shows = w.__SHOWS__ ?? [];
+        const posterMap = new Map(shows.map((s) => [s.slug, s]));
+        activityEl.innerHTML = history.map((item) => {
+          const show = posterMap.get(item.slug);
+          const thumb = show
+            ? `<img src="${show.poster}" alt="${show.title} poster" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm)" />`
+            : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3" /></svg>`;
+          const title = show?.title ?? (item.slug.replace(/^(movie|series)-\d+-?/, '').replace(/-/g, ' ') || item.slug);
+          return `
+            <div class="profile-activity__item">
+              <a href="/show/${item.slug}" class="profile-activity__thumb-link" aria-label="${title}">
+                <div class="profile-activity__thumb" aria-hidden="true">${thumb}</div>
+              </a>
+              <div class="profile-activity__info">
+                <div class="profile-activity__title">${title}</div>
+                <div class="profile-activity__meta">Watched · <time class="profile-activity__time">${new Date(item.watchedAt).toLocaleDateString()}</time></div>
               </div>
-            </a>
-            <div class="profile-activity__info">
-              <div class="profile-activity__title">${item.slug.replace(/^(movie|series)-\d+-?/, '').replace(/-/g, ' ') || item.slug}</div>
-              <div class="profile-activity__meta">Watched · <time class="profile-activity__time">${new Date(item.watchedAt).toLocaleDateString()}</time></div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
     }
   </script>

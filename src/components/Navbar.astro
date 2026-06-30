@@ -1,7 +1,6 @@
 ---
 import '../styles/components/navbar.css';
 
-const pathname = Astro.url.pathname;
 ---
 
 <header class="navbar" id="navbar">
@@ -11,12 +10,6 @@ const pathname = Astro.url.pathname;
         <span class="navbar__dot" aria-hidden="true"></span>
         MOVO
       </a>
-      <nav class="navbar__nav" aria-label="Main navigation">
-        <a href="/" class:list={['navbar__nav-link', { 'navbar__nav-link--active': pathname === '/' }]}>Home</a>
-        <a href="/?filter=movie" class:list={['navbar__nav-link', { 'navbar__nav-link--active': pathname === '/' && false }]}>Movies</a>
-        <a href="/?filter=series" class:list={['navbar__nav-link', { 'navbar__nav-link--active': pathname === '/' && false }]}>Series</a>
-        <a href="/saved" class:list={['navbar__nav-link', { 'navbar__nav-link--active': pathname === '/saved' }]}>My List</a>
-      </nav>
     </div>
 
     <div class="navbar__actions">

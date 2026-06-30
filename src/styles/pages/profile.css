@@ -153,11 +153,14 @@
   align-items: center;
   justify-content: center;
   color: var(--text-dim);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .profile-activity__thumb svg {
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
 }
 
 .profile-activity__info {

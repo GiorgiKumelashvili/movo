@@ -47,5 +47,18 @@ const { title, description = 'Stream movies and series on Movo', shows = [] } = 
       import { initTvNav } from '../scripts/tvNav';
       initTvNav();
     </script>
+
+    <script is:inline>
+      (function () {
+        var timer;
+        window.addEventListener('scroll', function () {
+          document.documentElement.classList.add('is-scrolling');
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            document.documentElement.classList.remove('is-scrolling');
+          }, 800);
+        }, { passive: true });
+      })();
+    </script>
   </body>
 </html>

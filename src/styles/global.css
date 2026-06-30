@@ -106,17 +106,22 @@ img {
 
 /* ── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  height: 4px;
-  width: 4px;
+  height: 6px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+html.is-scrolling::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* ── Utilities ─────────────────────────────────────────── */

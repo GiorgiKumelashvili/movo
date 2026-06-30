@@ -50,6 +50,7 @@ export function initOmniSearch(): void {
   const sectionLabel = document.getElementById('omni-section-label') as HTMLParagraphElement | null;
   const emptyEl = document.getElementById('omni-empty') as HTMLDivElement | null;
   const emptyMsg = document.getElementById('omni-empty-msg') as HTMLParagraphElement | null;
+  const loaderEl = document.getElementById('omni-loader') as HTMLDivElement | null;
   const closeBtn = document.getElementById('omni-close') as HTMLButtonElement | null;
   const toggleBtn = document.getElementById('search-toggle') as HTMLButtonElement | null;
 
@@ -127,7 +128,13 @@ export function initOmniSearch(): void {
     const q = query.trim().toLowerCase();
     if (q !== currentQuery || q.length < 2) return;
 
-    const tmdbResults = await fetchTmdbResults(q);
+    if (loaderEl) loaderEl.hidden = false;
+    let tmdbResults: ReturnType<typeof getShows> = [];
+    try {
+      tmdbResults = await fetchTmdbResults(q);
+    } finally {
+      if (loaderEl) loaderEl.hidden = true;
+    }
     if (q !== currentQuery) return;
 
     const localShows = getShows();
