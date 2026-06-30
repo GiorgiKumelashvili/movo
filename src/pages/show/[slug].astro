@@ -30,13 +30,17 @@ try {
   return Astro.redirect('/404');
 }
 
+const typeLabel = show.type === 'movie' ? 'Film' : 'Series';
+const genres = show.genre.join(' · ');
 const currentSeason = 1;
 const currentEpisode = 1;
 ---
 
 <Layout title={show.title} description={show.description} shows={[show]}>
   <main class="show-page" data-focusable>
-    <div class="show-page__backdrop-wrap">
+
+    <!-- Full-bleed backdrop hero -->
+    <div class="show-page__hero">
       <img
         class="show-page__backdrop"
         src={show.backdrop}
@@ -45,77 +49,86 @@ const currentEpisode = 1;
         width="1280"
         height="720"
       />
-      <div class="show-page__backdrop-overlay" />
-    </div>
+      <div class="show-page__scrim" aria-hidden="true"></div>
 
-    <div class="show-page__body">
-      <div class="show-page__top">
-        <img
-          class="show-page__poster"
-          src={show.poster}
-          alt={`${show.title} poster`}
-          width="300"
-          height="450"
-        />
-        <div class="show-page__info">
-          <div class="show-page__type-badge">{show.type}</div>
-          <h1 class="show-page__title">{show.title}</h1>
+      <a href="javascript:history.back()" class="show-page__back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Back
+      </a>
 
-          <div class="show-page__meta-row">
-            <span class="show-page__rating" aria-label={`Rating ${show.rating}`}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-              {show.rating.toFixed(1)}
-            </span>
-            <span class="show-page__year">{show.year}</span>
-            {show.runtime && <span class="show-page__runtime">{show.runtime}</span>}
-          </div>
+      <div class="show-page__hero-content">
+        <div class="show-page__badges">
+          <span class="show-page__type-badge">{typeLabel}</span>
+          {genres && <span class="show-page__genres">{genres}</span>}
+        </div>
 
-          <div class="show-page__tags">
-            {show.tags.map((tag) => (
-              <span class="show-page__tag">{tag}</span>
-            ))}
-          </div>
+        <h1 class="show-page__title">{show.title}</h1>
 
-          <div class="show-page__genres">
-            {show.genre.map((g) => (
-              <span class="show-page__genre">{g}</span>
-            ))}
-          </div>
+        <div class="show-page__meta-row">
+          <span class="show-page__rating" aria-label={`Rating ${show.rating}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+            {show.rating.toFixed(1)}
+          </span>
+          <span class="show-page__meta-sep" aria-hidden="true"></span>
+          <span class="show-page__year">{show.year}</span>
+          {show.tags.length > 0 && (
+            <>
+              <span class="show-page__meta-sep" aria-hidden="true"></span>
+              <span class="show-page__cert">{show.tags[0]}</span>
+            </>
+          )}
+          {show.runtime && (
+            <>
+              <span class="show-page__meta-sep" aria-hidden="true"></span>
+              <span class="show-page__runtime">{show.runtime}</span>
+            </>
+          )}
+        </div>
 
-          <p class="show-page__description">{show.description}</p>
+        <p class="show-page__description">{show.description}</p>
 
-          <div class="show-page__actions">
-            <button
-              class="show-page__btn show-page__btn--play"
-              id="play-btn"
-              aria-label={`Play ${show.title}`}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              Play
-            </button>
-            <button
-              class="show-page__btn show-page__btn--save"
-              id="save-btn"
-              aria-label="Save to watchlist"
-              data-slug={show.slug}
-              data-title={show.title}
-              data-poster={show.poster}
-              data-year={show.year}
-              data-showtype={show.type}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-              </svg>
-              Save
-            </button>
-          </div>
+        <div class="show-page__actions">
+          <button
+            class="show-page__btn show-page__btn--play"
+            id="play-btn"
+            aria-label={`Play ${show.title}`}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Play
+          </button>
+          <button
+            class="show-page__btn show-page__btn--save"
+            id="save-btn"
+            aria-label="Add to My List"
+            data-slug={show.slug}
+            data-title={show.title}
+            data-poster={show.poster}
+            data-year={show.year}
+            data-showtype={show.type}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            My List
+          </button>
+          <button class="show-page__btn show-page__btn--trailer" aria-label="Watch trailer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+            </svg>
+          </button>
         </div>
       </div>
+    </div>
 
+    <!-- Player + episodes -->
+    <div class="show-page__content">
       <div class="show-page__player-section" id="player-section">
         {show.type === 'movie' && (
           <VideoPlayer

@@ -5,10 +5,114 @@ import '../styles/pages/settings.css';
 
 <Layout title="Settings">
   <main class="settings-page">
-    <div class="settings-page__content">
-      <div class="settings-page__icon" aria-hidden="true">🚧</div>
-      <h1 class="settings-page__title">Under Construction</h1>
-      <p class="settings-page__sub">Settings are coming soon.</p>
-    </div>
+    <h1 class="settings-page__title">Settings</h1>
+
+    <!-- Playback & Preview -->
+    <section class="settings-group">
+      <h2 class="settings-group__label">Playback &amp; Preview</h2>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Autoplay next episode</span>
+            <span class="settings-row__desc">Play the next episode automatically</span>
+          </div>
+          <button class="toggle toggle--on" role="switch" aria-checked="true" data-key="autoplay_episode" aria-label="Autoplay next episode">
+            <span class="toggle__knob"></span>
+          </button>
+        </div>
+        <div class="settings-card__divider"></div>
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Autoplay previews</span>
+            <span class="settings-row__desc">Preview titles while browsing</span>
+          </div>
+          <button class="toggle toggle--on" role="switch" aria-checked="true" data-key="autoplay_previews" aria-label="Autoplay previews">
+            <span class="toggle__knob"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- General -->
+    <section class="settings-group">
+      <h2 class="settings-group__label">General</h2>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Smart downloads</span>
+            <span class="settings-row__desc">Auto-download next episodes on Wi-Fi</span>
+          </div>
+          <button class="toggle" role="switch" aria-checked="false" data-key="smart_downloads" aria-label="Smart downloads">
+            <span class="toggle__knob"></span>
+          </button>
+        </div>
+        <div class="settings-card__divider"></div>
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Streaming quality</span>
+            <span class="settings-row__desc">Select default video resolution</span>
+          </div>
+          <select class="settings-select" aria-label="Streaming quality">
+            <option value="auto">Auto</option>
+            <option value="4k">4K Ultra HD</option>
+            <option value="1080p">1080p HD</option>
+            <option value="720p">720p</option>
+          </select>
+        </div>
+        <div class="settings-card__divider"></div>
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Subtitle language</span>
+            <span class="settings-row__desc">Default subtitle track</span>
+          </div>
+          <select class="settings-select" aria-label="Subtitle language">
+            <option value="off">Off</option>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Danger Zone -->
+    <section class="settings-group settings-group--danger">
+      <h2 class="settings-group__label">Danger Zone</h2>
+      <div class="settings-card settings-card--danger">
+        <div class="settings-row">
+          <div class="settings-row__info">
+            <span class="settings-row__name">Clear watch history</span>
+            <span class="settings-row__desc">Permanently remove all viewing history</span>
+          </div>
+          <button class="settings-danger-btn" id="clear-history-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6" />
+              <path d="M9 6V4h6v2" />
+            </svg>
+            Clear history
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <script>
+    // Toggles
+    document.querySelectorAll<HTMLButtonElement>('.toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const checked = btn.getAttribute('aria-checked') === 'true';
+        btn.setAttribute('aria-checked', String(!checked));
+        btn.classList.toggle('toggle--on', !checked);
+      });
+    });
+
+    // Clear history
+    document.getElementById('clear-history-btn')?.addEventListener('click', () => {
+      if (confirm('Clear all watch history? This cannot be undone.')) {
+        localStorage.removeItem('movo_rw');
+      }
+    });
+  </script>
 </Layout>

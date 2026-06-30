@@ -11,10 +11,15 @@ function buildResultCard(show: Show): HTMLAnchorElement {
   a.className = 'omni-result-card';
   a.setAttribute('role', 'listitem');
   a.innerHTML = `
-    <img class="omni-result-card__poster" src="${show.poster}" alt="${show.title} poster" loading="lazy" />
-    <div class="omni-result-card__info">
-      <div class="omni-result-card__title">${show.title}</div>
-      <div class="omni-result-card__meta">${show.type} · ${show.year}</div>
+    <div class="omni-result-card__poster-wrap">
+      <img class="omni-result-card__poster" src="${show.poster}" alt="${show.title} poster" loading="lazy" />
+      <div class="omni-result-card__overlay">
+        <div class="omni-result-card__title">${show.title}</div>
+        <div class="omni-result-card__meta">
+          <span class="omni-result-card__star">★</span>
+          ${show.rating.toFixed(1)} · ${show.year}
+        </div>
+      </div>
     </div>
   `;
   return a;
@@ -42,13 +47,27 @@ export function initOmniSearch(): void {
   const overlay = document.getElementById('omni-overlay') as HTMLDivElement | null;
   const input = document.getElementById('omni-input') as HTMLInputElement | null;
   const results = document.getElementById('omni-results') as HTMLDivElement | null;
-  const hint = document.getElementById('omni-hint') as HTMLParagraphElement | null;
+  const sectionLabel = document.getElementById('omni-section-label') as HTMLParagraphElement | null;
+  const emptyEl = document.getElementById('omni-empty') as HTMLDivElement | null;
+  const emptyMsg = document.getElementById('omni-empty-msg') as HTMLParagraphElement | null;
   const closeBtn = document.getElementById('omni-close') as HTMLButtonElement | null;
   const toggleBtn = document.getElementById('search-toggle') as HTMLButtonElement | null;
 
-  if (!overlay || !input || !results || !hint || !closeBtn || !toggleBtn) return;
+  if (!overlay || !input || !results || !closeBtn || !toggleBtn) return;
 
   let currentQuery = '';
+
+  function showPopular(): void {
+    if (!results || !sectionLabel) return;
+    const shows = getShows();
+    results.innerHTML = '';
+    sectionLabel.textContent = 'Popular right now';
+    sectionLabel.style.display = '';
+    if (emptyEl) emptyEl.hidden = true;
+    const fragment = document.createDocumentFragment();
+    shows.slice(0, 20).forEach((s) => fragment.appendChild(buildResultCard(s)));
+    results.appendChild(fragment);
+  }
 
   function open(): void {
     overlay!.classList.add('open');
@@ -56,9 +75,8 @@ export function initOmniSearch(): void {
     toggleBtn!.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
     input!.value = '';
-    results!.innerHTML = '';
-    hint!.textContent = 'Type to search...';
-    hint!.style.display = '';
+    currentQuery = '';
+    showPopular();
     setTimeout(() => input!.focus(), 50);
   }
 
@@ -73,25 +91,35 @@ export function initOmniSearch(): void {
   function filter(query: string): void {
     const q = query.trim().toLowerCase();
     currentQuery = q;
-    results!.innerHTML = '';
 
     if (!q) {
-      hint!.textContent = 'Type to search...';
-      hint!.style.display = '';
+      showPopular();
       return;
     }
 
-    hint!.style.display = 'none';
+    if (!results || !sectionLabel) return;
+    results.innerHTML = '';
+    if (emptyEl) emptyEl.hidden = true;
+    sectionLabel.textContent = `Results`;
+    sectionLabel.style.display = '';
+
     const shows = getShows();
-    const matched = shows.filter((s) => s.title.toLowerCase().includes(q));
+    const matched = shows.filter(
+      (s) =>
+        s.title.toLowerCase().includes(q) ||
+        s.genre.some((g) => g.toLowerCase().includes(q)),
+    );
 
     if (matched.length === 0) {
-      hint!.textContent = `Searching...`;
-      hint!.style.display = '';
+      sectionLabel.style.display = 'none';
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        if (emptyMsg) emptyMsg.textContent = `No results for "${query}"`;
+      }
     } else {
       const fragment = document.createDocumentFragment();
       matched.forEach((s) => fragment.appendChild(buildResultCard(s)));
-      results!.appendChild(fragment);
+      results.appendChild(fragment);
     }
   }
 
@@ -100,7 +128,7 @@ export function initOmniSearch(): void {
     if (q !== currentQuery || q.length < 2) return;
 
     const tmdbResults = await fetchTmdbResults(q);
-    if (q !== currentQuery) return; // stale
+    if (q !== currentQuery) return;
 
     const localShows = getShows();
     const existingSlugs = new Set(
@@ -108,14 +136,12 @@ export function initOmniSearch(): void {
     );
     const fresh = tmdbResults.filter((s) => !existingSlugs.has(s.slug));
 
-    if (fresh.length > 0) {
+    if (fresh.length > 0 && results) {
       const fragment = document.createDocumentFragment();
       fresh.forEach((s) => fragment.appendChild(buildResultCard(s)));
-      results!.appendChild(fragment);
-      hint!.style.display = 'none';
-    } else if (results!.children.length === 0) {
-      hint!.textContent = `Nothing found for "${query}"`;
-      hint!.style.display = '';
+      results.appendChild(fragment);
+      if (emptyEl) emptyEl.hidden = true;
+      if (sectionLabel) sectionLabel.style.display = '';
     }
   }, 400);
 
@@ -133,5 +159,16 @@ export function initOmniSearch(): void {
 
   overlay.addEventListener('click', (e: MouseEvent) => {
     if (e.target === overlay) close();
+  });
+
+  // '/' shortcut
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (
+      e.key === '/' &&
+      !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as Element).tagName)
+    ) {
+      e.preventDefault();
+      open();
+    }
   });
 }

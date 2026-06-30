@@ -9,49 +9,66 @@ interface Props {
 const { show } = Astro.props;
 const playHref = `/show/${show.slug}`;
 const infoHref = `/show/${show.slug}`;
+const genres = show.genre.join(' · ');
 ---
 
 <section class="hero" aria-label={`Featured: ${show.title}`}>
-  <img
-    class="hero__backdrop"
-    src={show.backdrop}
-    alt={`${show.title} backdrop`}
-    fetchpriority="high"
-    width="1280"
-    height="720"
-  />
+  <div class="hero__backdrop-wrap">
+    <img
+      class="hero__backdrop"
+      src={show.backdrop}
+      alt={`${show.title} backdrop`}
+      fetchpriority="high"
+      width="1280"
+      height="720"
+    />
+  </div>
 
   <div class="hero__content">
-    <div class="hero__badge">
-      <span class="hero__type-label">{show.type}</span>
-      <span class="hero__rating" aria-label={`IMDB rating: ${show.rating}`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-          />
-        </svg>
-        {show.rating.toFixed(1)}
-      </span>
+    <div class="hero__eyebrow">
+      <span class="hero__featured-label">Featured</span>
+      {genres && <span class="hero__genres">{genres}</span>}
     </div>
 
     <h1 class="hero__title">{show.title}</h1>
 
-    <div class="hero__meta" aria-label="Genres">
-      {show.genre.map((g) => <span class="hero__genre">{g}</span>)}
+    <div class="hero__meta">
+      <span class="hero__rating" aria-label={`Rating: ${show.rating}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+        </svg>
+        {show.rating.toFixed(1)}
+      </span>
+      <span class="hero__meta-sep" aria-hidden="true"></span>
+      <span class="hero__year">{show.year}</span>
+      {show.tags.length > 0 && (
+        <>
+          <span class="hero__meta-sep" aria-hidden="true"></span>
+          <span class="hero__cert">{show.tags[0]}</span>
+        </>
+      )}
+      {show.runtime && (
+        <>
+          <span class="hero__meta-sep" aria-hidden="true"></span>
+          <span class="hero__runtime">{show.runtime}</span>
+        </>
+      )}
     </div>
 
     <p class="hero__description">{show.description}</p>
 
     <div class="hero__actions">
       <a href={playHref} class="hero__btn hero__btn--play" aria-label={`Play ${show.title}`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
           <path d="M8 5v14l11-7z" />
         </svg>
-        Play
+        Play Now
       </a>
       <a href={infoHref} class="hero__btn hero__btn--info" aria-label={`More info about ${show.title}`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         More Info
       </a>

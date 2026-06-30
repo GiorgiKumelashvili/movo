@@ -2,13 +2,16 @@
   position: relative;
   width: 100%;
   background-color: #000;
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   aspect-ratio: 16 / 9;
+  max-height: 64vh;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 .player-wrap:fullscreen {
   border-radius: 0;
+  max-height: none;
 }
 
 .player-iframe {

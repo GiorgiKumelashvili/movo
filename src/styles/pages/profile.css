@@ -1,5 +1,5 @@
 .profile-page {
-  padding: 40px 24px 40px;
+  padding: 40px clamp(20px, 4vw, 56px) 60px;
   max-width: 900px;
   margin: 0 auto;
 }
@@ -8,64 +8,71 @@
 .profile-page__header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
 .profile-page__avatar {
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent) 0%, #0066a0 100%);
+  background: var(--surface-raised);
+  border: 3px solid var(--gold);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 0 6px rgba(245, 196, 81, 0.1);
 }
 
 .profile-page__name {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 6px;
 }
 
-.profile-page__email {
+.profile-page__member {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  margin-top: 4px;
 }
 
 /* Stats */
 .profile-page__stats {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 48px;
 }
 
 .profile-stat {
-  background-color: var(--surface);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  flex: 1;
-  min-width: 100px;
-  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  min-width: 0;
 }
 
 .profile-stat__value {
   font-family: var(--font-mono);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  color: var(--accent);
+  font-size: 2.25rem;
+  font-weight: 500;
+  color: var(--gold);
   display: block;
+  line-height: 1;
+  margin-bottom: 6px;
 }
 
 .profile-stat__label {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  margin-top: 4px;
 }
 
 /* Section */
@@ -75,118 +82,105 @@
 
 .profile-page__section-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin-bottom: 18px;
 }
 
-.profile-page__section-title a {
-  font-family: var(--font-mono);
+/* Genre chips */
+.profile-page__genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.profile-genre-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(226, 55, 68, 0.12);
+  border: 1px solid rgba(226, 55, 68, 0.25);
+  color: var(--text);
   font-size: var(--text-sm);
-  color: var(--accent);
-  margin-left: 12px;
-  font-weight: 400;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  font-weight: 500;
+  min-height: unset;
 }
 
-.profile__empty {
+.profile-genre-chip__pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Activity */
+.profile-activity {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-activity__empty {
   color: var(--text-muted);
   font-size: var(--text-base);
-  padding: 24px 0;
+  padding: 16px 0;
 }
 
-/* Saved grid */
-.profile-saved-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--gap-card);
+.profile-activity__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.profile-saved-card {
-  display: block;
-  text-decoration: none;
+.profile-activity__item:last-child {
+  border-bottom: none;
+}
+
+.profile-activity__thumb-link {
+  flex-shrink: 0;
+  min-height: unset;
+}
+
+.profile-activity__thumb {
+  width: 40px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+}
+
+.profile-activity__thumb svg {
+  width: 16px;
+  height: 16px;
+}
+
+.profile-activity__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-activity__title {
+  font-size: var(--text-sm);
+  font-weight: 600;
   color: var(--text);
-  background-color: var(--surface);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: transform 0.15s ease;
-}
-
-.profile-saved-card:hover,
-.profile-saved-card:focus-visible {
-  transform: scale(1.03);
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.profile-saved-card__poster {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-}
-
-.profile-saved-card__info {
-  padding: 8px 10px;
-}
-
-.profile-saved-card__title {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
+  text-transform: capitalize;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
 
-.profile-saved-card__meta {
+.profile-activity__meta {
   font-size: var(--text-xs);
   color: var(--text-muted);
-  margin-top: 2px;
-  text-transform: capitalize;
 }
 
-/* Plan / membership card */
-.profile-plan {
-  background-color: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.profile-plan__label {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
-.profile-plan__value {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.profile-plan__badge {
-  background-color: var(--accent);
-  color: #fff;
+.profile-activity__time {
   font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-@media (min-width: 1280px) {
-  .profile-page {
-    padding: 56px 48px 60px;
-  }
-
-  .profile-saved-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
 }

@@ -61,21 +61,21 @@ export function renderRecentlyWatchedRow(containerId: string, allShows: Show[]):
     .map(
       (s) => `
     <li class="media-row__item">
-      <a href="/show/${s.slug}" class="media-card" data-focusable aria-label="${s.title}">
+      <a href="/show/${s.slug}" class="media-card" data-focusable aria-label="${s.title}, ${s.type}, ${s.year}">
         <div class="media-card__poster-wrap">
           <img class="media-card__poster" src="${s.poster}" alt="${s.title} poster" loading="lazy" width="300" height="450" />
           <span class="media-card__type-badge">${s.type}</span>
-        </div>
-        <div class="media-card__info">
-          <div class="media-card__title">${s.title}</div>
-          <div class="media-card__meta">
-            <span class="media-card__rating">
-              <svg viewBox="0 0 24 24" aria-hidden="true" style="width:10px;height:10px;fill:var(--accent-amber)">
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-              </svg>
-              ${s.rating.toFixed(1)}
-            </span>
-            <span class="media-card__year">${s.year}</span>
+          <div class="media-card__overlay">
+            <div class="media-card__title">${s.title}</div>
+            <div class="media-card__meta">
+              <span class="media-card__rating">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style="width:10px;height:10px;color:var(--gold)">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+                ${s.rating.toFixed(1)}
+              </span>
+              <span class="media-card__year">${s.year}</span>
+            </div>
           </div>
         </div>
       </a>
@@ -85,10 +85,10 @@ export function renderRecentlyWatchedRow(containerId: string, allShows: Show[]):
     .join('');
 
   container.innerHTML = `
-    <section class="media-row" aria-label="Recently Watched">
+    <section class="media-row" aria-label="Continue Watching">
       <div class="media-row__header">
-        <h2 class="media-row__title">Recently Watched</h2>
-        <span class="media-row__count">${items.length}</span>
+        <h2 class="media-row__title">Continue Watching</h2>
+        <span class="media-row__count">${items.length} titles</span>
       </div>
       <ul class="media-row__list">${list}</ul>
     </section>

@@ -5,12 +5,87 @@ import '../styles/pages/profile.css';
 
 <Layout title="Profile">
   <main class="profile-page">
+
+    <!-- Header: avatar + name -->
     <div class="profile-page__header">
-      <div class="profile-page__avatar" aria-hidden="true">👤</div>
+      <div class="profile-page__avatar" aria-hidden="true">AR</div>
       <div>
-        <h1 class="profile-page__name">Uncle Slow</h1>
-        <p class="profile-page__email">uncle.slow@movo.tv</p>
+        <h1 class="profile-page__name">Avery Rhodes</h1>
+        <p class="profile-page__member">Member since 2023 · Premium</p>
       </div>
     </div>
+
+    <!-- Stats grid -->
+    <div class="profile-page__stats">
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-watched">—</span>
+        <span class="profile-stat__label">Titles watched</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">1.2k</span>
+        <span class="profile-stat__label">Hours streamed</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value" id="stat-saved">—</span>
+        <span class="profile-stat__label">In My List</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">17</span>
+        <span class="profile-stat__label">Day streak</span>
+      </div>
+    </div>
+
+    <!-- Top Genres -->
+    <div class="profile-page__section">
+      <h2 class="profile-page__section-title">Top Genres</h2>
+      <div class="profile-page__genres">
+        <span class="profile-genre-chip">Sci-Fi <span class="profile-genre-chip__pct">28%</span></span>
+        <span class="profile-genre-chip">Thriller <span class="profile-genre-chip__pct">22%</span></span>
+        <span class="profile-genre-chip">Drama <span class="profile-genre-chip__pct">19%</span></span>
+        <span class="profile-genre-chip">Crime <span class="profile-genre-chip__pct">16%</span></span>
+        <span class="profile-genre-chip">Horror <span class="profile-genre-chip__pct">9%</span></span>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="profile-page__section">
+      <h2 class="profile-page__section-title">Recent Activity</h2>
+      <div id="profile-activity" class="profile-activity">
+        <p class="profile-activity__empty">No recent activity yet.</p>
+      </div>
+    </div>
+
   </main>
+
+  <script>
+    import { getSaved } from '../scripts/saved';
+    import { getWatchHistory } from '../scripts/recentlyWatched';
+
+    const watchEl = document.getElementById('stat-watched');
+    const savedEl = document.getElementById('stat-saved');
+    if (watchEl) watchEl.textContent = String(getWatchHistory().length);
+    if (savedEl) savedEl.textContent = String(getSaved().length);
+
+    const activityEl = document.getElementById('profile-activity');
+    if (activityEl) {
+      const history = getWatchHistory().slice(0, 8);
+      if (history.length > 0) {
+        activityEl.innerHTML = history.map((item) => `
+          <div class="profile-activity__item">
+            <a href="/show/${item.slug}" class="profile-activity__thumb-link" aria-label="${item.slug}">
+              <div class="profile-activity__thumb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              </div>
+            </a>
+            <div class="profile-activity__info">
+              <div class="profile-activity__title">${item.slug.replace(/^(movie|series)-\d+-?/, '').replace(/-/g, ' ') || item.slug}</div>
+              <div class="profile-activity__meta">Watched · <time class="profile-activity__time">${new Date(item.watchedAt).toLocaleDateString()}</time></div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  </script>
 </Layout>
