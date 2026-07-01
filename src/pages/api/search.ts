@@ -1,9 +1,9 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { searchMulti } from '../../lib/tmdb';
+import { searchMulti, resolveTmdbToken } from '../../lib/tmdb';
 
-export const GET: APIRoute = async ({ url }) => {
+export const GET: APIRoute = async ({ url, locals }) => {
   const query = url.searchParams.get('q') ?? '';
 
   if (!query.trim()) {
@@ -13,7 +13,7 @@ export const GET: APIRoute = async ({ url }) => {
   }
 
   try {
-    const results = await searchMulti(query);
+    const results = await searchMulti(query, resolveTmdbToken(locals));
     return new Response(JSON.stringify(results), {
       headers: { 'Content-Type': 'application/json' },
     });

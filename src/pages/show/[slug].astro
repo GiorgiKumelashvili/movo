@@ -4,7 +4,7 @@ export const prerender = false;
 import Layout from '../../components/Layout.astro';
 import VideoPlayer from '../../components/VideoPlayer.astro';
 import SeasonSelector from '../../components/SeasonSelector.astro';
-import { getMovieDetail, getTvDetail } from '../../lib/tmdb';
+import { getMovieDetail, getTvDetail, resolveTmdbToken } from '../../lib/tmdb';
 import type { Show } from '../../data/shows';
 import '../../styles/pages/show.css';
 
@@ -21,11 +21,13 @@ function parseSlug(s: string): { type: 'movie' | 'series'; tmdbId: number } | nu
 const parsed = slug ? parseSlug(slug) : null;
 if (!parsed) return Astro.redirect('/404');
 
+const token = resolveTmdbToken(Astro.locals);
+
 let show: Show;
 try {
   show = parsed.type === 'movie'
-    ? await getMovieDetail(parsed.tmdbId)
-    : await getTvDetail(parsed.tmdbId);
+    ? await getMovieDetail(parsed.tmdbId, token)
+    : await getTvDetail(parsed.tmdbId, token);
 } catch {
   return Astro.redirect('/404');
 }

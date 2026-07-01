@@ -77,12 +77,23 @@ interface TmdbMultiSearchResponse {
 
 type GenreMap = ReadonlyMap<number, string>;
 
-// ── Fetch wrapper (server-side only — uses import.meta.env) ───────────────────
+// ── Fetch wrapper (server-side only) ───────────────────────────────────────────
+// On Cloudflare, on-demand (SSR) routes don't get dashboard env vars via
+// import.meta.env — those are baked in at build time. Runtime vars/secrets are
+// only available via Astro.locals.runtime.env, so callers on SSR routes must
+// pass that token through explicitly.
 
-async function tmdbFetch<T>(path: string): Promise<T> {
-  const token = import.meta.env.TMDB_BEARER_TOKEN;
+interface CloudflareRuntimeLocals {
+  runtime?: { env?: { TMDB_BEARER_TOKEN?: string } };
+}
+
+export function resolveTmdbToken(locals?: CloudflareRuntimeLocals): string | undefined {
+  return locals?.runtime?.env?.TMDB_BEARER_TOKEN ?? import.meta.env.TMDB_BEARER_TOKEN;
+}
+
+async function tmdbFetch<T>(path: string, token?: string): Promise<T> {
   const res = await fetch(`${TMDB_BASE}${path}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token ?? import.meta.env.TMDB_BEARER_TOKEN}` },
   });
   if (!res.ok) throw new Error(`TMDB ${path} → HTTP ${res.status}`);
   return res.json() as Promise<T>;
@@ -165,30 +176,32 @@ function mapTv(item: TmdbTvListItem, genres: GenreMap, seasons?: Season[]): Show
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-export async function discoverMovies(page = 1): Promise<Show[]> {
+export async function discoverMovies(page = 1, token?: string): Promise<Show[]> {
   const [data, genreData] = await Promise.all([
     tmdbFetch<TmdbDiscoverResponse<TmdbMovieListItem>>(
       `/discover/movie?sort_by=popularity.desc&page=${page}&language=en-US`,
+      token,
     ),
-    tmdbFetch<TmdbGenreListResponse>('/genre/movie/list?language=en-US'),
+    tmdbFetch<TmdbGenreListResponse>('/genre/movie/list?language=en-US', token),
   ]);
   const genres: GenreMap = new Map(genreData.genres.map((g) => [g.id, g.name]));
   return data.results.map((m) => mapMovie(m, genres));
 }
 
-export async function discoverTv(page = 1): Promise<Show[]> {
+export async function discoverTv(page = 1, token?: string): Promise<Show[]> {
   const [data, genreData] = await Promise.all([
     tmdbFetch<TmdbDiscoverResponse<TmdbTvListItem>>(
       `/discover/tv?sort_by=popularity.desc&page=${page}&language=en-US`,
+      token,
     ),
-    tmdbFetch<TmdbGenreListResponse>('/genre/tv/list?language=en-US'),
+    tmdbFetch<TmdbGenreListResponse>('/genre/tv/list?language=en-US', token),
   ]);
   const genres: GenreMap = new Map(genreData.genres.map((g) => [g.id, g.name]));
   return data.results.map((m) => mapTv(m, genres));
 }
 
-export async function getMovieDetail(tmdbId: number): Promise<Show> {
-  const detail = await tmdbFetch<TmdbMovieDetail>(`/movie/${tmdbId}?language=en-US`);
+export async function getMovieDetail(tmdbId: number, token?: string): Promise<Show> {
+  const detail = await tmdbFetch<TmdbMovieDetail>(`/movie/${tmdbId}?language=en-US`, token);
   const genres: GenreMap = new Map(detail.genres.map((g) => [g.id, g.name]));
   const listItem: TmdbMovieListItem = {
     id: detail.id,
@@ -203,8 +216,8 @@ export async function getMovieDetail(tmdbId: number): Promise<Show> {
   return mapMovie(listItem, genres, formatRuntime(detail.runtime));
 }
 
-export async function getTvDetail(tmdbId: number): Promise<Show> {
-  const detail = await tmdbFetch<TmdbTvDetail>(`/tv/${tmdbId}?language=en-US`);
+export async function getTvDetail(tmdbId: number, token?: string): Promise<Show> {
+  const detail = await tmdbFetch<TmdbTvDetail>(`/tv/${tmdbId}?language=en-US`, token);
   const genres: GenreMap = new Map(detail.genres.map((g) => [g.id, g.name]));
   const listItem: TmdbTvListItem = {
     id: detail.id,
@@ -219,10 +232,11 @@ export async function getTvDetail(tmdbId: number): Promise<Show> {
   return mapTv(listItem, genres, buildStubSeasons(detail.seasons));
 }
 
-export async function searchMulti(query: string): Promise<Show[]> {
+export async function searchMulti(query: string, token?: string): Promise<Show[]> {
   if (!query.trim()) return [];
   const data = await tmdbFetch<TmdbMultiSearchResponse>(
     `/search/multi?query=${encodeURIComponent(query)}&language=en-US`,
+    token,
   );
   const emptyGenres: GenreMap = new Map();
   return data.results
